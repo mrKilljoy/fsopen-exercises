@@ -1,0 +1,4 @@
+sequenceDiagram
+    user->>+server: POST /exampleapp/new_note_spa
+    server-->>user: HTTP 201, response
+    Note right of user: the page is updated with data from the received response
