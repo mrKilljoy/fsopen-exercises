@@ -1,2 +1,2 @@
 # fsopen-exercises
-A repository with exercises from Full stack open course
+A repository with submissions created for Full stack open course.
