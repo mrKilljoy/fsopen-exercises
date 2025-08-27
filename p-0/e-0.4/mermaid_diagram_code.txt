@@ -1,0 +1,13 @@
+sequenceDiagram
+    user->>+server: sends a note (HTTP POST)
+    server-->>user: HTTP 302 (Redirect)
+    Note right of user: the browser is redirected to the address provided in Location header
+    user->>+server: GET /exampleapp/notes
+    server-->>user: HTTP 200, document
+    user->>+server: GET /exampleapp/main.css
+    server-->>user: HTTP 200, CSS file
+    user->>+server: GET /exampleapp/main.js
+    server-->>user: HTTP 200, JS file
+    Note right of user: JS code is executed and triggers one more request
+    user->>+server: GET /exampleapp/data.json
+    server-->>user: HTTP 200, JSON file
