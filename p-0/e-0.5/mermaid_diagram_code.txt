@@ -1,0 +1,10 @@
+sequenceDiagram
+    user->>+server: GET /exampleapp/spa
+    server-->>user: HTTP 200, document
+    user->>+server: GET /exampleapp/main.css
+    server-->>user: HTTP 200, CSS file
+    user->>+server: GET /exampleapp/spa.js
+    server-->>user: HTTP 200, JS file
+    Note right of user: JS code is executed and triggers one more request
+    user->>+server: GET /exampleapp/data.json
+    server-->>user: HTTP 200, JSON file
