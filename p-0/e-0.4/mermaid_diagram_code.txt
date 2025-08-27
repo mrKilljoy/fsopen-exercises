@@ -1,6 +1,6 @@
 sequenceDiagram
     user->>+server: sends a note (HTTP POST)
-    server-->>user: HTTP 302 (Redirect)
+    server-->>user: HTTP 302, document (+redirect)
     Note right of user: the browser is redirected to the address provided in Location header
     user->>+server: GET /exampleapp/notes
     server-->>user: HTTP 200, document
