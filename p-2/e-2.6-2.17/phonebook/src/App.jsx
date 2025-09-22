@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Filter from './components/Filter';
 import NewPersonForm from './components/NewPersonForm';
 import Numbers from './components/Numbers';
+import Notification from './components/Notification';
 import personsManager from './services/personsManager';
 
 const App = () => {
@@ -11,6 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [filter, setFilter] = useState('');
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
 
   const personsFiltered = filter ?
     persons.filter(x => x.name.toLowerCase().includes(filter.toLowerCase())) :
@@ -37,9 +40,11 @@ const App = () => {
         .then(r => {
           setPersons(persons.concat(r));
           console.log('person added to server');
+          showMessage('person added to server')
         })
         .catch(err => {
           console.error("couldn't add person to server", err);
+          showError("couldn't add person to server");
         });
     } else {
       const upd = confirm('Do you want to update phone number for this person?');
@@ -50,6 +55,7 @@ const App = () => {
       personsManager.updatePerson(target.id, { ...target, phone: newPhone })
         .then(() => {
           console.log('person updated on server');
+          showMessage('person updated on server');
         });
       setPersons(persons.map(x => x.id !== target.id ? x : { ...x, phone: newPhone }));
     }
@@ -66,6 +72,7 @@ const App = () => {
       })
       .catch(err => {
         console.error("couldn't get persons from server", err);
+        showError("couldn't get persons from server");
       });
   }
 
@@ -83,7 +90,22 @@ const App = () => {
       })
       .catch(err => {
         console.log("couldn't delete person from server", err);
+        showError("couldn't delete person from server");
       });
+  }
+
+  const showMessage = (msg) => {
+    setMessage(msg);
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  }
+  
+  const showError = (err) => {
+    setError(err);
+    setTimeout(() => {
+      setError(null);
+    }, 3000);
   }
 
   useEffect(initializePersons, []);
@@ -91,6 +113,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
+      <Notification message={error} isError={true} />
       <Filter filter={filter} handleFilter={handleFilter} />
       <NewPersonForm
         newName={newName}
