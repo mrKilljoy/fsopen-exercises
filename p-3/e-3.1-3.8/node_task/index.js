@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const data = require('./test_data');
+const staticData = require('./test_data');
 
 const app = express();
 app.use(express.json());
@@ -18,8 +18,10 @@ app.use(morgan(function (tokens, req, res) {
     tokens['body'](req, res) || ''
   ].join(' ')
 }));
+app.use(express.static('dist'))
 const PORT = process.env.PORT || 3001;
-let persons = data.default;
+const baseUrl = '/api/persons';
+let persons = staticData.default;
 
 function generateId() {
     return Math.floor(Math.random() * 10000).toString();
@@ -35,11 +37,11 @@ app.get('/info', (req, res) => {
     res.status(200).send(msg + date);
 });
 
-app.get('/api/persons', (req, res) => {
+app.get(baseUrl, (req, res) => {
     res.status(200).json(persons);
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get(`${baseUrl}/:id`, (req, res) => {
     const id = req.params.id;
     const person = persons.find(p => p.id === id);
     if (!person) {
@@ -48,7 +50,7 @@ app.get('/api/persons/:id', (req, res) => {
     res.status(200).json(person);
 });
 
-app.post('/api/persons', (req, res) => {
+app.post(baseUrl, (req, res) => {
     const body = req.body;
 
     if (!body || !body.name)
@@ -63,7 +65,7 @@ app.post('/api/persons', (req, res) => {
     res.status(200).end();
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete(`${baseUrl}/:id`, (req, res) => {
     const id = req.params.id;
     const idx = persons.findIndex(p => p.id === id);
     if (idx && idx >= 0) {
