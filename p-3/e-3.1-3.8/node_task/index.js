@@ -18,7 +18,7 @@ app.use(morgan(function (tokens, req, res) {
     tokens['body'](req, res) || ''
   ].join(' ')
 }));
-const PORT = 3005;
+const PORT = process.env.PORT || 3001;
 let persons = data.default;
 
 function generateId() {
@@ -26,7 +26,7 @@ function generateId() {
 }
 
 app.get('/', (req, res) => {
-    res.status(200).send('Hello World!');
+    res.status(200).send('Phonebook app is running!');
 });
 
 app.get('/info', (req, res) => {
