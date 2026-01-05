@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import Toggler from './components/Toggler'
 import BlogForm from './components/BlogForm'
 import loginService, { UserCacheKey } from './services/login'
 
@@ -27,14 +26,14 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null);
-    window.localStorage.removeItem(UserCacheKey);
+    loginService.removeUser();
   };
 
   const loginPart = () => {
     return (
       <div>
         <h2>Log in</h2>
-        <form onSubmit={handleLogin}>
+        <form className='login-form' onSubmit={handleLogin}>
           <input type="text" name="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
           <br />
           <input type="password" name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />

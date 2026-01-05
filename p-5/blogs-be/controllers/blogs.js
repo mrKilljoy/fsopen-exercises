@@ -24,7 +24,7 @@ router.get('/', async (_, response) => {
 
 router.get('/:id', async (request, response) => {
   const id = request.params.id;
-  const item = await Blog.findById(id);
+  const item = await Blog.findById(id).populate('user');
 
   if (!item) {
     return response.status(404).end();
@@ -70,6 +70,11 @@ router.post('/', async (request, response) => {
 router.put('/:id', async (request, response) => {
   const id = request.params.id;
 
+  const decodedToken = jwt.verify(readToken(request), process.env.AUTH_SECRET);
+  if (!decodedToken?.id) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
+
   if (!id) {
     return response.status(400).end();
   }
@@ -81,7 +86,8 @@ router.put('/:id', async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes
-  }, { new: true });
+  }, { new: true })
+  .populate('user');
   
   response.status(200).json(updatedItem);
 });
@@ -89,11 +95,20 @@ router.put('/:id', async (request, response) => {
 router.delete('/:id', async (request, response) => {
   const id = request.params.id;
 
+  const decodedToken = jwt.verify(readToken(request), process.env.AUTH_SECRET);
+  if (!decodedToken?.id) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
+
   if (!id) {
     return response.status(400).end();
   }
 
-  await Blog.findByIdAndDelete(id);
+  const itemToDelete = await Blog.findById(id).populate('user');
+  if (itemToDelete?.user?._id?.toString() !== decodedToken.id) {
+    return response.status(403).json({ error: 'only creator can delete this blog' });
+  }
+  await itemToDelete.deleteOne();
   response.status(204).end();
 });
 

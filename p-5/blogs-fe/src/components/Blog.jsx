@@ -31,18 +31,18 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   };
 
   return (
-    <div>
-      <div>
-        <label>{blog.title}</label>
-        <label>{blog.author}</label>
-        <div style={buttonBlockStyle}>
-          <button onClick={toggleDetails}>{isLong ? 'Hide' : 'Show'} details</button>
+    <div className='blog-item'>
+      <div className='blog-item-base'>
+        <span>{blog.title}</span>
+        <span>{blog.author}</span>
+        <div className='blog-item-buttons' style={buttonBlockStyle}>
+          <button onClick={toggleDetails}>{`${isLong ? 'Hide' : 'Show'} details`}</button>
           <button onClick={handleDeleteBlog}>Delete</button>
         </div>
       </div>
-      {isLong && <div style={detailsStyle}>
+      {isLong && <div className='blog-item-ext' style={detailsStyle}>
         <p>{`URL: ${blog.url}`}</p>
-        <p>
+        <p className='blog-item-likes'>
           <span>{`Likes: ${blog.likes}`}</span>
           <button onClick={handleLikeBlog}>Like</button>
         </p>

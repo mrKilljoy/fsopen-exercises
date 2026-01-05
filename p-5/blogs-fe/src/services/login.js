@@ -19,8 +19,12 @@ const getUser = () => {
   return user ? JSON.parse(user) : null;
 };
 
+const removeUser = () => {
+  window.localStorage.removeItem(UserCacheKey);
+};
+
 const setUser = (user) => {
   window.localStorage.setItem(UserCacheKey, JSON.stringify(user));
 };
 
-export default { logIn, getUser, setUser };
+export default { logIn, getUser, setUser, removeUser };
